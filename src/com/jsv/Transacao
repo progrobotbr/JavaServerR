@@ -1,0 +1,16 @@
+Regras para se criar uma transação:
+
+dim okcode as c[10].
+dim gTrz as c[4].
+
+dim scn1000 as i. //Criar as variáveis para a tela
+dim scn2000 as i.
+dim scnNNNN as i. //Dependendo do número de variáveis
+
+dim trzx005 as i. //Criar a variável para transação. Somente 1 variável.
+
+goto screen 1000. //Para ir para a primeira telas 
+
+load scn1000x005.
+load scn2000x005. 
+load scnNNNNx005.    //Dependerá do número de telas da transação

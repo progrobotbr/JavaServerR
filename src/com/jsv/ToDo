@@ -1,0 +1,184 @@
+ToDo
+
+5 (nao) - Montar esquema de compilação de vários programas em um só
+
+5.1 - Compilação da transação: validar arquivo base com arquivos filhos, principalmente as variáveis e estruturas
+
+6 (ok) - Implementar lógica vários programas carregados ao mesmo tempo. chamada de rotinas de programas:
+    nome de programa deve ter 12 letras no máximo
+      load programa.
+      call programa->calc in ... out .... 
+
+7 (ok) - Mudar lógica da variável global de parâmetros????
+
+8 - (ok )lógica do repositório: ler arquivos, gravar fontes e compilados
+
+9 - lógica de tratamento do erro - ponto do programa que deu erro, nomes das variáveis carregadas,
+                            valor das variáveis (menos tabela, somente o nome), ...
+                            ao invés de fim de programa processado, soltar um rc de processamento: 00
+                            contínua, 01 - processado, -1.. -999 erros
+                            
+10 - (ok) mudar lógica de fim de programa      
+
+11 (ok) - Arrumar IF-ELSE-ENDIF, quando é falso funciona, mas quando é verdadeiro executa o else
+   
+12 (ok) - Colocar lógica de carregar funções de programas diferentes no programa base (__base__). Quando a função 
+     existir no __base__ ela não é carreda no base. Isto é bom para transações com telas, pois poderá ser coladas
+     rotinas nas que serão chamadas normalmente, excetuando-se as funções como create, processbeforeoutput e processafterinput,
+     que deverão ser chamados como tela->create, etc.
+     
+13 - permitir colocar o caracter _ no nome de programas, subs e variáveis,exemplo: process_before_output
+
+14 (ok) - permitir a chamada dinâmida de subs: [programa]->process_before_output. Creio que não será necessário, pois,
+     a chamada aos métodos crt, pai, pbo são feitas pelo Java
+     
+15 - lógica da variável c[n], pois hoje, tudo é string. Deverá ter o tamanho correto com brancos completando. Quando
+     for fazer a lógica de comparação, comparar pelo início
+      
+16 (ok) - 52 programas atuais  
+
+17 - comentários não funcionam
+
+18 (ok) - Criar varíavel de passo: 1,3,4,5,...
+     1-cliente conecta
+     2-handshake
+     3-cliente chama a transação (LOGI)
+     4-servidor carrega transação, envia estrutura de tela
+     5-cliente sinaliza ok
+     6-servidor processa a tela (executa trz create, scn create, scn pbo, trz pbo) 
+     7-cliente executa telas (eventos de enter, botoes)
+     8-servidor processa a tela, executa fluxo de tela (executa trz pai, scn pai, scn pbo, trz pbo)
+         
+19 - Bean na Session. Este bean deve conter se o usuário está logado, transação atual, ... 
+
+20 - Esquema de memória para variáveis (isto para a linguagem C: 
+        quantas variáveis serão colocadas no vetor=> 30		
+        tem espaço? Sim, então faz linha abaixo. Não tem espaço aumenta vetor em tamanho total em mais 10%		
+        então aumenta valor atual+30		
+        copia o atual + as novas
+        variáveis que são globais, acessar pelo endereçamento indireto:
+           _L1 -> retira o _L e pega o 1 este é o número no array de locais
+           _G1 -> retira o _G e pega o 1 este é o número no array de globais, mas, o valor conterá uma referência.
+                 para o número do array base, 1 aponta para 20 do array global. O acesso é indireto.	
+           o frame possuirá duas áreas de memória: uma para variáveis locais (acesso direto) e outra para variáveis
+             globais acesso indireto         
+ 
+ 21 - Fazer módulo tela: ajudará a criar as telas e módulo árvore de objeto para editar os objetos
+ 
+ 22 - linguagem de banco de dados: 
+        consulta:
+           select a~campo1, a~campo2, b~campo1, b~campo2 
+             from nome_tabela1 as a 
+                  nome_tabela2 as b
+             inner join a~campo1 = b~campo2
+             into table tb_variavel
+             where a~campo1 = variavel1 and| or
+                   b~campo1 = variavel1 and| or
+        inclusão:
+           insert into nome_tabela (tabela_campo1, tabela_campo2...)
+             values (var1, var2 ...)
+        alteração:
+           update nome_tabela set (tabela_campo1=var1, tabela_campo2=var2)
+             where tabela_campo1 = variavel1 and| or
+                   tabela_campo2 = variavel2  ...
+        exclusão:
+           delete from nome_tabela 
+             where tabela_campo1 = variavel1 and| or
+                   tabela_campo2 = variavei2  ...
+
+ 23 - Mudar lógica de processamento da transação: fazer loop no debug e retirar a 
+        lógica atual de processamento direto
+        
+ 24 - Arrumar o client: criar pilha de dektops; hierarquia de objetos :session, protocol, request, response, Gui e outros (arrumar a casa)
+ 
+ 25 - Gui - seleção de objeto gráfico, criar uma função genérica, pois hoje tem que iterar na coleção de objetos do Panel
+ 
+ 26 - SQL - não está conseguindo diferenciar NOME e SQLNOME. Atualmente, funciona com tipo FIELD
+ 
+ 27 - A compilação deixa todo o texto em maiuscula. Mas tipo string devem permancer do modo atual.
+ 
+ 28 - SQL - Implementar o comando DELETE 
+ 
+ 29 - (ok) Gui - Os programas TableExample e TableExample2 possuem exemplos de tabelas com limitação do tamanho de campos, inclusive JTextField
+ 
+ 30 - (ok) Exemplo de chamada nativa (utilizar nativecall). As bibliotecas nativas devem ser em 
+      maiusculas e ficam em nativelib.
+dim v1 as i.
+dim v2 as i.
+dim r2 as i.
+dim x1 as i.
+v1 = 5.
+v2 = 7.
+call calm out resultado = r2
+          in  valor1 = v1
+              valor2 =  v2.
+x1 = r2.
+sub calm in valor1 as i
+            valor2 as i
+         out resultado as i.
+   nativecall calcmais.
+endsub.
+
+ 31 - criar o tipo any para passagem de parâmetros
+ 
+ 32 - Erro de arryindexoutbound no cliente quando se gera o grid
+ 
+ 33 - encode dos dados quando o cliente enviar dados para o servidor
+ 
+ 34 - Screen Painter, pontos:
+         - Pesquisar módulos
+         - Editar transação raiz
+         - Editar tela
+         - Nova transação
+         - Gravar
+         - Compilar
+         - Excluir transação
+         - mudar o protocolo de comunicação para considerar somente campos que foram alterados
+
+Estrutura da tela: 
+arvore:
+   tabela: 
+   	tipo_do_objeto (03) [TRZ,SCN, PRG]
+	nome_do_objeto (08)
+	desc_do_objeto (40) 
+
+campos:
+   pesq_nome_da_transacao (08)
+   disp_nome_da_transacao (08)
+   disp_nome_da_tela      (08)
+
+   edit_nome_da_tela      (08)
+   edit_desc_da_tela      (40)
+
+   edit_nome_transacao    (08)
+   edit_desc_transacao    (08)
+
+tabela:
+
+   texto_dos_programas:
+	   tipo_linha (02)
+	   nuro_linha (05)
+	   desc_linha (80)
+
+   estrutura_de_tela:
+           tipo_linha
+           nuro_linha
+           desc_linha
+
+
+***Cuidado no tipo String **** alterei linha 241 do AParserAll.java de obj para var
+
+*** Erro na sequencia de TRZ-PAI - SCR-PAI, depois faz o SCR-CREATE
+
+
+
+          
+         
+         
+         
+ 
+  
+
+
+ 
+                                   

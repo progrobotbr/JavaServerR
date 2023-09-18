@@ -1,0 +1,1 @@
+java -cp "JavaServerR.jar;c:\program files\java\jdk1.7.0_67\lib\tools.jar" com.jsr.server.servermain

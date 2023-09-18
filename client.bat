@@ -1,0 +1,1 @@
+java -cp JavaServerR.jar com.jsr.client.clientmain

@@ -1,0 +1,1 @@
+java -cp JavaServerR.jar;C:\Users\Renato\workspace\Editor\fifeSoft.jar com.jsv.client.main.ClientMain XK01

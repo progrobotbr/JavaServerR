@@ -1,0 +1,3168 @@
+   0  $accept : input $end
+
+   1  input :
+   2        | input line
+
+   3  line : NL
+   4       | stmt NL
+   5       | stmt2 NL
+
+   6  input2 :
+   7         | input2 line2
+
+   8  line2 : NL
+   9        | stmt NL
+
+  10  stmt : DIM declvar POINT
+  11       | TYPE NAME declvars ENDTYPE POINT
+  12       | BREAK POINT
+  13       | attrib POINT
+  14       | WHILE log POINT input2 ENDWHILE POINT
+  15       | IF log POINT input2 ENDIF POINT
+  16       | IF log POINT input2 ELSE POINT input2 ENDIF POINT
+  17       | TBFIRST nametab POINT
+  18       | FOR EACH namestru IN nametab POINT input2 ENDFOR POINT
+  19       | CALL namefunc2 ml callparam POINT
+  20       | APPEND namestru TO nametab POINT
+  21       | READ nametab TO namestru logkey POINT
+  22       | DELETE nametab logkey POINT
+  23       | LOAD NAME POINT
+  24       | GOTO SCREEN NUMINT POINT
+  25       | BRANCH POINT
+  26       | SELECT sqlfds FROM sqljoin INTO sqltb sqlwhere POINT
+  27       | INSERT INTO sqltb LPAR sqlfds RPAR VALUES LPAR sqlvls RPAR POINT
+  28       | UPDATE sqltb SET sqlpairs sqlwhere POINT
+  29       | MODIFY nametab FROM namestru logkey POINT
+  30       | NATIVECALL NAME POINT
+
+  31  stmt2 : SUB namefunc ml parameters POINT input ENDSUB POINT
+
+  32  declvar : NAME AS type
+  33          | TABLE AS type
+
+  34  declvars :
+  35           | declvars declvar1
+
+  36  declvar1 : NL
+  37           | declvar
+
+  38  type : TYPEC
+  39       | TYPEI
+  40       | TYPEF
+  41       | TYPEB
+  42       | namestru
+
+  43  namestru : NAME
+
+  44  nametab : NAME
+
+  45  namefunc : NAME
+
+  46  namefunc2 : NAME
+  47            | CALLPROG
+
+  48  attrib : var EQ exp
+
+  49  var : NAME
+  50      | FIELD
+
+  51  exp : exp PLUS exp
+  52      | exp MINUS exp
+  53      | exp TIMES exp
+  54      | exp DIV exp
+  55      | LPAR exp RPAR
+  56      | NUMINT
+  57      | NUMFLT
+  58      | NAME
+  59      | FIELD
+  60      | STRING
+
+  61  log : log OR log
+  62      | log AND log
+  63      | log EQ log
+  64      | log NEQ log
+  65      | log LT log
+  66      | log LTE log
+  67      | log GT log
+  68      | log GTE log
+  69      | LPAR log RPAR
+  70      | TRUE
+  71      | FALSE
+  72      | NUMINT
+  73      | NUMFLT
+  74      | STRING
+  75      | var
+
+  76  logtb : NAME EQ nameconst
+
+  77  logtbs :
+  78         | logtbs logtb
+
+  79  logkey : KEY logtbs
+
+  80  parameters : funcins funcouts
+
+  81  funcins :
+  82          | funcin
+
+  83  funcin : IN declvars
+
+  84  funcouts :
+  85           | funcout
+
+  86  funcout : OUT declvars
+
+  87  callparam : callouts callins
+
+  88  callouts :
+  89           | callout
+
+  90  callout : OUT callatribs
+
+  91  callins :
+  92          | callin
+
+  93  callin : IN callatribs
+
+  94  callatribs :
+  95             | callatribs callatrib ml
+
+  96  callatrib : NAME EQ nameconst
+
+  97  nameconst : NAME
+  98            | STRING
+  99            | NUMINT
+ 100            | NUMFLT
+ 101            | FIELD
+
+ 102  ml :
+ 103     | ml NL
+
+ 104  sqlname : NAME
+ 105          | NAMESQLJ
+
+ 106  sqlfds : sqlname
+ 107         | sqlfds COMMA sqlname
+
+ 108  sqlvls : nameconst
+ 109         | sqlvls COMMA nameconst
+
+ 110  sqltb : NAME
+
+ 111  sqlvtb : NAME
+
+ 112  sqllog : sqllog OR sqllog
+ 113         | sqllog AND sqllog
+ 114         | sqllog EQ sqllog
+ 115         | sqllog NEQ sqllog
+ 116         | sqllog LT sqllog
+ 117         | sqllog LTE sqllog
+ 118         | sqllog GT sqllog
+ 119         | sqllog GTE sqllog
+ 120         | LPAR sqllog RPAR
+ 121         | TRUE
+ 122         | FALSE
+ 123         | NUMINT
+ 124         | NUMFLT
+ 125         | STRING
+ 126         | FIELD
+ 127         | sqlname
+
+ 128  sqlwhere :
+ 129           | WHERE sqllog
+
+ 130  sqlvar : TRUE
+ 131         | FALSE
+ 132         | NUMINT
+ 133         | NUMFLT
+ 134         | STRING
+ 135         | NAME
+ 136         | FIELD
+
+ 137  sqlfield : NAME
+
+ 138  sqlpair : sqlfield EQ sqlvar
+
+ 139  sqlpairs : sqlpair
+ 140           | sqlpairs COMMA sqlpair
+
+ 141  sqljoin : sqljoininner
+
+ 142  sqljoininner : sqltb
+ 143               | sqltb AS NAME
+ 144               | sqljoininner INNER JOIN sqltb AS NAME sqlon
+
+ 145  sqlon : ON sqlonpars
+
+ 146  sqlonpars : sqlonpar
+ 147            | sqlonpars AND sqlonpar
+
+ 148  sqlonpar : sqlfieldon EQ sqlfieldon
+
+ 149  sqlfieldon : NAMESQLJ
+
+state 0
+	$accept : . input $end  (0)
+	input : .  (1)
+
+	.  reduce 1
+
+	input  goto 1
+
+
+state 1
+	$accept : input . $end  (0)
+	input : input . line  (2)
+
+	$end  accept
+	NL  shift 2
+	NAME  shift 3
+	FIELD  shift 4
+	DIM  shift 5
+	IF  shift 6
+	CALL  shift 7
+	WHILE  shift 8
+	SUB  shift 9
+	TYPE  shift 10
+	FOR  shift 11
+	BREAK  shift 12
+	APPEND  shift 13
+	READ  shift 14
+	DELETE  shift 15
+	LOAD  shift 16
+	TBFIRST  shift 17
+	GOTO  shift 18
+	BRANCH  shift 19
+	NATIVECALL  shift 20
+	MODIFY  shift 21
+	UPDATE  shift 22
+	SELECT  shift 23
+	INSERT  shift 24
+	.  error
+
+	line  goto 25
+	stmt  goto 26
+	stmt2  goto 27
+	attrib  goto 28
+	var  goto 29
+
+
+state 2
+	line : NL .  (3)
+
+	.  reduce 3
+
+
+state 3
+	var : NAME .  (49)
+
+	.  reduce 49
+
+
+state 4
+	var : FIELD .  (50)
+
+	.  reduce 50
+
+
+state 5
+	stmt : DIM . declvar POINT  (10)
+
+	NAME  shift 30
+	TABLE  shift 31
+	.  error
+
+	declvar  goto 32
+
+
+state 6
+	stmt : IF . log POINT input2 ENDIF POINT  (15)
+	stmt : IF . log POINT input2 ELSE POINT input2 ENDIF POINT  (16)
+
+	NUMINT  shift 33
+	NUMFLT  shift 34
+	NAME  shift 3
+	FIELD  shift 4
+	STRING  shift 35
+	TRUE  shift 36
+	FALSE  shift 37
+	LPAR  shift 38
+	.  error
+
+	log  goto 39
+	var  goto 40
+
+
+state 7
+	stmt : CALL . namefunc2 ml callparam POINT  (19)
+
+	NAME  shift 41
+	CALLPROG  shift 42
+	.  error
+
+	namefunc2  goto 43
+
+
+state 8
+	stmt : WHILE . log POINT input2 ENDWHILE POINT  (14)
+
+	NUMINT  shift 33
+	NUMFLT  shift 34
+	NAME  shift 3
+	FIELD  shift 4
+	STRING  shift 35
+	TRUE  shift 36
+	FALSE  shift 37
+	LPAR  shift 38
+	.  error
+
+	log  goto 44
+	var  goto 40
+
+
+state 9
+	stmt2 : SUB . namefunc ml parameters POINT input ENDSUB POINT  (31)
+
+	NAME  shift 45
+	.  error
+
+	namefunc  goto 46
+
+
+state 10
+	stmt : TYPE . NAME declvars ENDTYPE POINT  (11)
+
+	NAME  shift 47
+	.  error
+
+
+state 11
+	stmt : FOR . EACH namestru IN nametab POINT input2 ENDFOR POINT  (18)
+
+	EACH  shift 48
+	.  error
+
+
+state 12
+	stmt : BREAK . POINT  (12)
+
+	POINT  shift 49
+	.  error
+
+
+state 13
+	stmt : APPEND . namestru TO nametab POINT  (20)
+
+	NAME  shift 50
+	.  error
+
+	namestru  goto 51
+
+
+state 14
+	stmt : READ . nametab TO namestru logkey POINT  (21)
+
+	NAME  shift 52
+	.  error
+
+	nametab  goto 53
+
+
+state 15
+	stmt : DELETE . nametab logkey POINT  (22)
+
+	NAME  shift 52
+	.  error
+
+	nametab  goto 54
+
+
+state 16
+	stmt : LOAD . NAME POINT  (23)
+
+	NAME  shift 55
+	.  error
+
+
+state 17
+	stmt : TBFIRST . nametab POINT  (17)
+
+	NAME  shift 52
+	.  error
+
+	nametab  goto 56
+
+
+state 18
+	stmt : GOTO . SCREEN NUMINT POINT  (24)
+
+	SCREEN  shift 57
+	.  error
+
+
+state 19
+	stmt : BRANCH . POINT  (25)
+
+	POINT  shift 58
+	.  error
+
+
+state 20
+	stmt : NATIVECALL . NAME POINT  (30)
+
+	NAME  shift 59
+	.  error
+
+
+state 21
+	stmt : MODIFY . nametab FROM namestru logkey POINT  (29)
+
+	NAME  shift 52
+	.  error
+
+	nametab  goto 60
+
+
+state 22
+	stmt : UPDATE . sqltb SET sqlpairs sqlwhere POINT  (28)
+
+	NAME  shift 61
+	.  error
+
+	sqltb  goto 62
+
+
+state 23
+	stmt : SELECT . sqlfds FROM sqljoin INTO sqltb sqlwhere POINT  (26)
+
+	NAME  shift 63
+	NAMESQLJ  shift 64
+	.  error
+
+	sqlname  goto 65
+	sqlfds  goto 66
+
+
+state 24
+	stmt : INSERT . INTO sqltb LPAR sqlfds RPAR VALUES LPAR sqlvls RPAR POINT  (27)
+
+	INTO  shift 67
+	.  error
+
+
+state 25
+	input : input line .  (2)
+
+	.  reduce 2
+
+
+state 26
+	line : stmt . NL  (4)
+
+	NL  shift 68
+	.  error
+
+
+state 27
+	line : stmt2 . NL  (5)
+
+	NL  shift 69
+	.  error
+
+
+state 28
+	stmt : attrib . POINT  (13)
+
+	POINT  shift 70
+	.  error
+
+
+state 29
+	attrib : var . EQ exp  (48)
+
+	EQ  shift 71
+	.  error
+
+
+state 30
+	declvar : NAME . AS type  (32)
+
+	AS  shift 72
+	.  error
+
+
+state 31
+	declvar : TABLE . AS type  (33)
+
+	AS  shift 73
+	.  error
+
+
+state 32
+	stmt : DIM declvar . POINT  (10)
+
+	POINT  shift 74
+	.  error
+
+
+state 33
+	log : NUMINT .  (72)
+
+	.  reduce 72
+
+
+state 34
+	log : NUMFLT .  (73)
+
+	.  reduce 73
+
+
+state 35
+	log : STRING .  (74)
+
+	.  reduce 74
+
+
+state 36
+	log : TRUE .  (70)
+
+	.  reduce 70
+
+
+state 37
+	log : FALSE .  (71)
+
+	.  reduce 71
+
+
+state 38
+	log : LPAR . log RPAR  (69)
+
+	NUMINT  shift 33
+	NUMFLT  shift 34
+	NAME  shift 3
+	FIELD  shift 4
+	STRING  shift 35
+	TRUE  shift 36
+	FALSE  shift 37
+	LPAR  shift 38
+	.  error
+
+	log  goto 75
+	var  goto 40
+
+
+state 39
+	stmt : IF log . POINT input2 ENDIF POINT  (15)
+	stmt : IF log . POINT input2 ELSE POINT input2 ENDIF POINT  (16)
+	log : log . OR log  (61)
+	log : log . AND log  (62)
+	log : log . EQ log  (63)
+	log : log . NEQ log  (64)
+	log : log . LT log  (65)
+	log : log . LTE log  (66)
+	log : log . GT log  (67)
+	log : log . GTE log  (68)
+
+	POINT  shift 76
+	EQ  shift 77
+	AND  shift 78
+	OR  shift 79
+	LT  shift 80
+	LTE  shift 81
+	GT  shift 82
+	GTE  shift 83
+	NEQ  shift 84
+	.  error
+
+
+state 40
+	log : var .  (75)
+
+	.  reduce 75
+
+
+state 41
+	namefunc2 : NAME .  (46)
+
+	.  reduce 46
+
+
+state 42
+	namefunc2 : CALLPROG .  (47)
+
+	.  reduce 47
+
+
+state 43
+	stmt : CALL namefunc2 . ml callparam POINT  (19)
+	ml : .  (102)
+
+	.  reduce 102
+
+	ml  goto 85
+
+
+state 44
+	stmt : WHILE log . POINT input2 ENDWHILE POINT  (14)
+	log : log . OR log  (61)
+	log : log . AND log  (62)
+	log : log . EQ log  (63)
+	log : log . NEQ log  (64)
+	log : log . LT log  (65)
+	log : log . LTE log  (66)
+	log : log . GT log  (67)
+	log : log . GTE log  (68)
+
+	POINT  shift 86
+	EQ  shift 77
+	AND  shift 78
+	OR  shift 79
+	LT  shift 80
+	LTE  shift 81
+	GT  shift 82
+	GTE  shift 83
+	NEQ  shift 84
+	.  error
+
+
+state 45
+	namefunc : NAME .  (45)
+
+	.  reduce 45
+
+
+state 46
+	stmt2 : SUB namefunc . ml parameters POINT input ENDSUB POINT  (31)
+	ml : .  (102)
+
+	.  reduce 102
+
+	ml  goto 87
+
+
+state 47
+	stmt : TYPE NAME . declvars ENDTYPE POINT  (11)
+	declvars : .  (34)
+
+	.  reduce 34
+
+	declvars  goto 88
+
+
+state 48
+	stmt : FOR EACH . namestru IN nametab POINT input2 ENDFOR POINT  (18)
+
+	NAME  shift 50
+	.  error
+
+	namestru  goto 89
+
+
+state 49
+	stmt : BREAK POINT .  (12)
+
+	.  reduce 12
+
+
+state 50
+	namestru : NAME .  (43)
+
+	.  reduce 43
+
+
+state 51
+	stmt : APPEND namestru . TO nametab POINT  (20)
+
+	TO  shift 90
+	.  error
+
+
+state 52
+	nametab : NAME .  (44)
+
+	.  reduce 44
+
+
+state 53
+	stmt : READ nametab . TO namestru logkey POINT  (21)
+
+	TO  shift 91
+	.  error
+
+
+state 54
+	stmt : DELETE nametab . logkey POINT  (22)
+
+	KEY  shift 92
+	.  error
+
+	logkey  goto 93
+
+
+state 55
+	stmt : LOAD NAME . POINT  (23)
+
+	POINT  shift 94
+	.  error
+
+
+state 56
+	stmt : TBFIRST nametab . POINT  (17)
+
+	POINT  shift 95
+	.  error
+
+
+state 57
+	stmt : GOTO SCREEN . NUMINT POINT  (24)
+
+	NUMINT  shift 96
+	.  error
+
+
+state 58
+	stmt : BRANCH POINT .  (25)
+
+	.  reduce 25
+
+
+state 59
+	stmt : NATIVECALL NAME . POINT  (30)
+
+	POINT  shift 97
+	.  error
+
+
+state 60
+	stmt : MODIFY nametab . FROM namestru logkey POINT  (29)
+
+	FROM  shift 98
+	.  error
+
+
+state 61
+	sqltb : NAME .  (110)
+
+	.  reduce 110
+
+
+state 62
+	stmt : UPDATE sqltb . SET sqlpairs sqlwhere POINT  (28)
+
+	SET  shift 99
+	.  error
+
+
+state 63
+	sqlname : NAME .  (104)
+
+	.  reduce 104
+
+
+state 64
+	sqlname : NAMESQLJ .  (105)
+
+	.  reduce 105
+
+
+state 65
+	sqlfds : sqlname .  (106)
+
+	.  reduce 106
+
+
+state 66
+	stmt : SELECT sqlfds . FROM sqljoin INTO sqltb sqlwhere POINT  (26)
+	sqlfds : sqlfds . COMMA sqlname  (107)
+
+	COMMA  shift 100
+	FROM  shift 101
+	.  error
+
+
+state 67
+	stmt : INSERT INTO . sqltb LPAR sqlfds RPAR VALUES LPAR sqlvls RPAR POINT  (27)
+
+	NAME  shift 61
+	.  error
+
+	sqltb  goto 102
+
+
+state 68
+	line : stmt NL .  (4)
+
+	.  reduce 4
+
+
+state 69
+	line : stmt2 NL .  (5)
+
+	.  reduce 5
+
+
+state 70
+	stmt : attrib POINT .  (13)
+
+	.  reduce 13
+
+
+state 71
+	attrib : var EQ . exp  (48)
+
+	NUMINT  shift 103
+	NUMFLT  shift 104
+	NAME  shift 105
+	FIELD  shift 106
+	STRING  shift 107
+	LPAR  shift 108
+	.  error
+
+	exp  goto 109
+
+
+state 72
+	declvar : NAME AS . type  (32)
+
+	NAME  shift 50
+	TYPEC  shift 110
+	TYPEI  shift 111
+	TYPEF  shift 112
+	TYPEB  shift 113
+	.  error
+
+	namestru  goto 114
+	type  goto 115
+
+
+state 73
+	declvar : TABLE AS . type  (33)
+
+	NAME  shift 50
+	TYPEC  shift 110
+	TYPEI  shift 111
+	TYPEF  shift 112
+	TYPEB  shift 113
+	.  error
+
+	namestru  goto 114
+	type  goto 116
+
+
+state 74
+	stmt : DIM declvar POINT .  (10)
+
+	.  reduce 10
+
+
+state 75
+	log : log . OR log  (61)
+	log : log . AND log  (62)
+	log : log . EQ log  (63)
+	log : log . NEQ log  (64)
+	log : log . LT log  (65)
+	log : log . LTE log  (66)
+	log : log . GT log  (67)
+	log : log . GTE log  (68)
+	log : LPAR log . RPAR  (69)
+
+	RPAR  shift 117
+	EQ  shift 77
+	AND  shift 78
+	OR  shift 79
+	LT  shift 80
+	LTE  shift 81
+	GT  shift 82
+	GTE  shift 83
+	NEQ  shift 84
+	.  error
+
+
+state 76
+	stmt : IF log POINT . input2 ENDIF POINT  (15)
+	stmt : IF log POINT . input2 ELSE POINT input2 ENDIF POINT  (16)
+	input2 : .  (6)
+
+	.  reduce 6
+
+	input2  goto 118
+
+
+state 77
+	log : log EQ . log  (63)
+
+	NUMINT  shift 33
+	NUMFLT  shift 34
+	NAME  shift 3
+	FIELD  shift 4
+	STRING  shift 35
+	TRUE  shift 36
+	FALSE  shift 37
+	LPAR  shift 38
+	.  error
+
+	log  goto 119
+	var  goto 40
+
+
+state 78
+	log : log AND . log  (62)
+
+	NUMINT  shift 33
+	NUMFLT  shift 34
+	NAME  shift 3
+	FIELD  shift 4
+	STRING  shift 35
+	TRUE  shift 36
+	FALSE  shift 37
+	LPAR  shift 38
+	.  error
+
+	log  goto 120
+	var  goto 40
+
+
+state 79
+	log : log OR . log  (61)
+
+	NUMINT  shift 33
+	NUMFLT  shift 34
+	NAME  shift 3
+	FIELD  shift 4
+	STRING  shift 35
+	TRUE  shift 36
+	FALSE  shift 37
+	LPAR  shift 38
+	.  error
+
+	log  goto 121
+	var  goto 40
+
+
+state 80
+	log : log LT . log  (65)
+
+	NUMINT  shift 33
+	NUMFLT  shift 34
+	NAME  shift 3
+	FIELD  shift 4
+	STRING  shift 35
+	TRUE  shift 36
+	FALSE  shift 37
+	LPAR  shift 38
+	.  error
+
+	log  goto 122
+	var  goto 40
+
+
+state 81
+	log : log LTE . log  (66)
+
+	NUMINT  shift 33
+	NUMFLT  shift 34
+	NAME  shift 3
+	FIELD  shift 4
+	STRING  shift 35
+	TRUE  shift 36
+	FALSE  shift 37
+	LPAR  shift 38
+	.  error
+
+	log  goto 123
+	var  goto 40
+
+
+state 82
+	log : log GT . log  (67)
+
+	NUMINT  shift 33
+	NUMFLT  shift 34
+	NAME  shift 3
+	FIELD  shift 4
+	STRING  shift 35
+	TRUE  shift 36
+	FALSE  shift 37
+	LPAR  shift 38
+	.  error
+
+	log  goto 124
+	var  goto 40
+
+
+state 83
+	log : log GTE . log  (68)
+
+	NUMINT  shift 33
+	NUMFLT  shift 34
+	NAME  shift 3
+	FIELD  shift 4
+	STRING  shift 35
+	TRUE  shift 36
+	FALSE  shift 37
+	LPAR  shift 38
+	.  error
+
+	log  goto 125
+	var  goto 40
+
+
+state 84
+	log : log NEQ . log  (64)
+
+	NUMINT  shift 33
+	NUMFLT  shift 34
+	NAME  shift 3
+	FIELD  shift 4
+	STRING  shift 35
+	TRUE  shift 36
+	FALSE  shift 37
+	LPAR  shift 38
+	.  error
+
+	log  goto 126
+	var  goto 40
+
+
+state 85
+	stmt : CALL namefunc2 ml . callparam POINT  (19)
+	ml : ml . NL  (103)
+	callouts : .  (88)
+
+	NL  shift 127
+	OUT  shift 128
+	POINT  reduce 88
+	IN  reduce 88
+
+	callparam  goto 129
+	callouts  goto 130
+	callout  goto 131
+
+
+state 86
+	stmt : WHILE log POINT . input2 ENDWHILE POINT  (14)
+	input2 : .  (6)
+
+	.  reduce 6
+
+	input2  goto 132
+
+
+state 87
+	stmt2 : SUB namefunc ml . parameters POINT input ENDSUB POINT  (31)
+	ml : ml . NL  (103)
+	funcins : .  (81)
+
+	NL  shift 127
+	IN  shift 133
+	POINT  reduce 81
+	OUT  reduce 81
+
+	parameters  goto 134
+	funcins  goto 135
+	funcin  goto 136
+
+
+state 88
+	stmt : TYPE NAME declvars . ENDTYPE POINT  (11)
+	declvars : declvars . declvar1  (35)
+
+	NL  shift 137
+	NAME  shift 30
+	TABLE  shift 31
+	ENDTYPE  shift 138
+	.  error
+
+	declvar  goto 139
+	declvar1  goto 140
+
+
+state 89
+	stmt : FOR EACH namestru . IN nametab POINT input2 ENDFOR POINT  (18)
+
+	IN  shift 141
+	.  error
+
+
+state 90
+	stmt : APPEND namestru TO . nametab POINT  (20)
+
+	NAME  shift 52
+	.  error
+
+	nametab  goto 142
+
+
+state 91
+	stmt : READ nametab TO . namestru logkey POINT  (21)
+
+	NAME  shift 50
+	.  error
+
+	namestru  goto 143
+
+
+state 92
+	logkey : KEY . logtbs  (79)
+	logtbs : .  (77)
+
+	.  reduce 77
+
+	logtbs  goto 144
+
+
+state 93
+	stmt : DELETE nametab logkey . POINT  (22)
+
+	POINT  shift 145
+	.  error
+
+
+state 94
+	stmt : LOAD NAME POINT .  (23)
+
+	.  reduce 23
+
+
+state 95
+	stmt : TBFIRST nametab POINT .  (17)
+
+	.  reduce 17
+
+
+state 96
+	stmt : GOTO SCREEN NUMINT . POINT  (24)
+
+	POINT  shift 146
+	.  error
+
+
+state 97
+	stmt : NATIVECALL NAME POINT .  (30)
+
+	.  reduce 30
+
+
+state 98
+	stmt : MODIFY nametab FROM . namestru logkey POINT  (29)
+
+	NAME  shift 50
+	.  error
+
+	namestru  goto 147
+
+
+state 99
+	stmt : UPDATE sqltb SET . sqlpairs sqlwhere POINT  (28)
+
+	NAME  shift 148
+	.  error
+
+	sqlfield  goto 149
+	sqlpair  goto 150
+	sqlpairs  goto 151
+
+
+state 100
+	sqlfds : sqlfds COMMA . sqlname  (107)
+
+	NAME  shift 63
+	NAMESQLJ  shift 64
+	.  error
+
+	sqlname  goto 152
+
+
+state 101
+	stmt : SELECT sqlfds FROM . sqljoin INTO sqltb sqlwhere POINT  (26)
+
+	NAME  shift 61
+	.  error
+
+	sqltb  goto 153
+	sqljoin  goto 154
+	sqljoininner  goto 155
+
+
+state 102
+	stmt : INSERT INTO sqltb . LPAR sqlfds RPAR VALUES LPAR sqlvls RPAR POINT  (27)
+
+	LPAR  shift 156
+	.  error
+
+
+state 103
+	exp : NUMINT .  (56)
+
+	.  reduce 56
+
+
+state 104
+	exp : NUMFLT .  (57)
+
+	.  reduce 57
+
+
+state 105
+	exp : NAME .  (58)
+
+	.  reduce 58
+
+
+state 106
+	exp : FIELD .  (59)
+
+	.  reduce 59
+
+
+state 107
+	exp : STRING .  (60)
+
+	.  reduce 60
+
+
+state 108
+	exp : LPAR . exp RPAR  (55)
+
+	NUMINT  shift 103
+	NUMFLT  shift 104
+	NAME  shift 105
+	FIELD  shift 106
+	STRING  shift 107
+	LPAR  shift 108
+	.  error
+
+	exp  goto 157
+
+
+state 109
+	attrib : var EQ exp .  (48)
+	exp : exp . PLUS exp  (51)
+	exp : exp . MINUS exp  (52)
+	exp : exp . TIMES exp  (53)
+	exp : exp . DIV exp  (54)
+
+	PLUS  shift 158
+	MINUS  shift 159
+	DIV  shift 160
+	TIMES  shift 161
+	POINT  reduce 48
+
+
+state 110
+	type : TYPEC .  (38)
+
+	.  reduce 38
+
+
+state 111
+	type : TYPEI .  (39)
+
+	.  reduce 39
+
+
+state 112
+	type : TYPEF .  (40)
+
+	.  reduce 40
+
+
+state 113
+	type : TYPEB .  (41)
+
+	.  reduce 41
+
+
+state 114
+	type : namestru .  (42)
+
+	.  reduce 42
+
+
+state 115
+	declvar : NAME AS type .  (32)
+
+	.  reduce 32
+
+
+state 116
+	declvar : TABLE AS type .  (33)
+
+	.  reduce 33
+
+
+state 117
+	log : LPAR log RPAR .  (69)
+
+	.  reduce 69
+
+
+state 118
+	input2 : input2 . line2  (7)
+	stmt : IF log POINT input2 . ENDIF POINT  (15)
+	stmt : IF log POINT input2 . ELSE POINT input2 ENDIF POINT  (16)
+
+	NL  shift 162
+	NAME  shift 3
+	FIELD  shift 4
+	DIM  shift 5
+	IF  shift 6
+	ELSE  shift 163
+	CALL  shift 7
+	ENDIF  shift 164
+	WHILE  shift 8
+	TYPE  shift 10
+	FOR  shift 11
+	BREAK  shift 12
+	APPEND  shift 13
+	READ  shift 14
+	DELETE  shift 15
+	LOAD  shift 16
+	TBFIRST  shift 17
+	GOTO  shift 18
+	BRANCH  shift 19
+	NATIVECALL  shift 20
+	MODIFY  shift 21
+	UPDATE  shift 22
+	SELECT  shift 23
+	INSERT  shift 24
+	.  error
+
+	stmt  goto 165
+	line2  goto 166
+	attrib  goto 28
+	var  goto 29
+
+
+state 119
+	log : log . OR log  (61)
+	log : log . AND log  (62)
+	log : log . EQ log  (63)
+	log : log EQ log .  (63)
+	log : log . NEQ log  (64)
+	log : log . LT log  (65)
+	log : log . LTE log  (66)
+	log : log . GT log  (67)
+	log : log . GTE log  (68)
+
+	AND  shift 78
+	OR  shift 79
+	LT  shift 80
+	LTE  shift 81
+	GT  shift 82
+	GTE  shift 83
+	NEQ  shift 84
+	POINT  reduce 63
+	RPAR  reduce 63
+	EQ  reduce 63
+
+
+state 120
+	log : log . OR log  (61)
+	log : log . AND log  (62)
+	log : log AND log .  (62)
+	log : log . EQ log  (63)
+	log : log . NEQ log  (64)
+	log : log . LT log  (65)
+	log : log . LTE log  (66)
+	log : log . GT log  (67)
+	log : log . GTE log  (68)
+
+	OR  shift 79
+	LT  shift 80
+	LTE  shift 81
+	GT  shift 82
+	GTE  shift 83
+	NEQ  shift 84
+	POINT  reduce 62
+	RPAR  reduce 62
+	EQ  reduce 62
+	AND  reduce 62
+
+
+state 121
+	log : log . OR log  (61)
+	log : log OR log .  (61)
+	log : log . AND log  (62)
+	log : log . EQ log  (63)
+	log : log . NEQ log  (64)
+	log : log . LT log  (65)
+	log : log . LTE log  (66)
+	log : log . GT log  (67)
+	log : log . GTE log  (68)
+
+	LT  shift 80
+	LTE  shift 81
+	GT  shift 82
+	GTE  shift 83
+	NEQ  shift 84
+	POINT  reduce 61
+	RPAR  reduce 61
+	EQ  reduce 61
+	AND  reduce 61
+	OR  reduce 61
+
+
+state 122
+	log : log . OR log  (61)
+	log : log . AND log  (62)
+	log : log . EQ log  (63)
+	log : log . NEQ log  (64)
+	log : log . LT log  (65)
+	log : log LT log .  (65)
+	log : log . LTE log  (66)
+	log : log . GT log  (67)
+	log : log . GTE log  (68)
+
+	GT  shift 82
+	GTE  shift 83
+	NEQ  shift 84
+	POINT  reduce 65
+	RPAR  reduce 65
+	EQ  reduce 65
+	AND  reduce 65
+	OR  reduce 65
+	LT  reduce 65
+	LTE  reduce 65
+
+
+state 123
+	log : log . OR log  (61)
+	log : log . AND log  (62)
+	log : log . EQ log  (63)
+	log : log . NEQ log  (64)
+	log : log . LT log  (65)
+	log : log . LTE log  (66)
+	log : log LTE log .  (66)
+	log : log . GT log  (67)
+	log : log . GTE log  (68)
+
+	LT  shift 80
+	GT  shift 82
+	GTE  shift 83
+	NEQ  shift 84
+	POINT  reduce 66
+	RPAR  reduce 66
+	EQ  reduce 66
+	AND  reduce 66
+	OR  reduce 66
+	LTE  reduce 66
+
+
+state 124
+	log : log . OR log  (61)
+	log : log . AND log  (62)
+	log : log . EQ log  (63)
+	log : log . NEQ log  (64)
+	log : log . LT log  (65)
+	log : log . LTE log  (66)
+	log : log . GT log  (67)
+	log : log GT log .  (67)
+	log : log . GTE log  (68)
+
+	NEQ  shift 84
+	POINT  reduce 67
+	RPAR  reduce 67
+	EQ  reduce 67
+	AND  reduce 67
+	OR  reduce 67
+	LT  reduce 67
+	LTE  reduce 67
+	GT  reduce 67
+	GTE  reduce 67
+
+
+state 125
+	log : log . OR log  (61)
+	log : log . AND log  (62)
+	log : log . EQ log  (63)
+	log : log . NEQ log  (64)
+	log : log . LT log  (65)
+	log : log . LTE log  (66)
+	log : log . GT log  (67)
+	log : log . GTE log  (68)
+	log : log GTE log .  (68)
+
+	GT  shift 82
+	NEQ  shift 84
+	POINT  reduce 68
+	RPAR  reduce 68
+	EQ  reduce 68
+	AND  reduce 68
+	OR  reduce 68
+	LT  reduce 68
+	LTE  reduce 68
+	GTE  reduce 68
+
+
+state 126
+	log : log . OR log  (61)
+	log : log . AND log  (62)
+	log : log . EQ log  (63)
+	log : log . NEQ log  (64)
+	log : log NEQ log .  (64)
+	log : log . LT log  (65)
+	log : log . LTE log  (66)
+	log : log . GT log  (67)
+	log : log . GTE log  (68)
+
+	.  reduce 64
+
+
+state 127
+	ml : ml NL .  (103)
+
+	.  reduce 103
+
+
+state 128
+	callout : OUT . callatribs  (90)
+	callatribs : .  (94)
+
+	.  reduce 94
+
+	callatribs  goto 167
+
+
+state 129
+	stmt : CALL namefunc2 ml callparam . POINT  (19)
+
+	POINT  shift 168
+	.  error
+
+
+state 130
+	callparam : callouts . callins  (87)
+	callins : .  (91)
+
+	IN  shift 169
+	POINT  reduce 91
+
+	callins  goto 170
+	callin  goto 171
+
+
+state 131
+	callouts : callout .  (89)
+
+	.  reduce 89
+
+
+state 132
+	input2 : input2 . line2  (7)
+	stmt : WHILE log POINT input2 . ENDWHILE POINT  (14)
+
+	NL  shift 162
+	NAME  shift 3
+	FIELD  shift 4
+	DIM  shift 5
+	IF  shift 6
+	CALL  shift 7
+	WHILE  shift 8
+	ENDWHILE  shift 172
+	TYPE  shift 10
+	FOR  shift 11
+	BREAK  shift 12
+	APPEND  shift 13
+	READ  shift 14
+	DELETE  shift 15
+	LOAD  shift 16
+	TBFIRST  shift 17
+	GOTO  shift 18
+	BRANCH  shift 19
+	NATIVECALL  shift 20
+	MODIFY  shift 21
+	UPDATE  shift 22
+	SELECT  shift 23
+	INSERT  shift 24
+	.  error
+
+	stmt  goto 165
+	line2  goto 166
+	attrib  goto 28
+	var  goto 29
+
+
+state 133
+	funcin : IN . declvars  (83)
+	declvars : .  (34)
+
+	.  reduce 34
+
+	declvars  goto 173
+
+
+state 134
+	stmt2 : SUB namefunc ml parameters . POINT input ENDSUB POINT  (31)
+
+	POINT  shift 174
+	.  error
+
+
+state 135
+	parameters : funcins . funcouts  (80)
+	funcouts : .  (84)
+
+	OUT  shift 175
+	POINT  reduce 84
+
+	funcouts  goto 176
+	funcout  goto 177
+
+
+state 136
+	funcins : funcin .  (82)
+
+	.  reduce 82
+
+
+state 137
+	declvar1 : NL .  (36)
+
+	.  reduce 36
+
+
+state 138
+	stmt : TYPE NAME declvars ENDTYPE . POINT  (11)
+
+	POINT  shift 178
+	.  error
+
+
+state 139
+	declvar1 : declvar .  (37)
+
+	.  reduce 37
+
+
+state 140
+	declvars : declvars declvar1 .  (35)
+
+	.  reduce 35
+
+
+state 141
+	stmt : FOR EACH namestru IN . nametab POINT input2 ENDFOR POINT  (18)
+
+	NAME  shift 52
+	.  error
+
+	nametab  goto 179
+
+
+state 142
+	stmt : APPEND namestru TO nametab . POINT  (20)
+
+	POINT  shift 180
+	.  error
+
+
+state 143
+	stmt : READ nametab TO namestru . logkey POINT  (21)
+
+	KEY  shift 92
+	.  error
+
+	logkey  goto 181
+
+
+state 144
+	logtbs : logtbs . logtb  (78)
+	logkey : KEY logtbs .  (79)
+
+	NAME  shift 182
+	POINT  reduce 79
+
+	logtb  goto 183
+
+
+state 145
+	stmt : DELETE nametab logkey POINT .  (22)
+
+	.  reduce 22
+
+
+state 146
+	stmt : GOTO SCREEN NUMINT POINT .  (24)
+
+	.  reduce 24
+
+
+state 147
+	stmt : MODIFY nametab FROM namestru . logkey POINT  (29)
+
+	KEY  shift 92
+	.  error
+
+	logkey  goto 184
+
+
+state 148
+	sqlfield : NAME .  (137)
+
+	.  reduce 137
+
+
+state 149
+	sqlpair : sqlfield . EQ sqlvar  (138)
+
+	EQ  shift 185
+	.  error
+
+
+state 150
+	sqlpairs : sqlpair .  (139)
+
+	.  reduce 139
+
+
+state 151
+	stmt : UPDATE sqltb SET sqlpairs . sqlwhere POINT  (28)
+	sqlpairs : sqlpairs . COMMA sqlpair  (140)
+	sqlwhere : .  (128)
+
+	COMMA  shift 186
+	WHERE  shift 187
+	POINT  reduce 128
+
+	sqlwhere  goto 188
+
+
+state 152
+	sqlfds : sqlfds COMMA sqlname .  (107)
+
+	.  reduce 107
+
+
+state 153
+	sqljoininner : sqltb .  (142)
+	sqljoininner : sqltb . AS NAME  (143)
+
+	AS  shift 189
+	INNER  reduce 142
+	INTO  reduce 142
+
+
+state 154
+	stmt : SELECT sqlfds FROM sqljoin . INTO sqltb sqlwhere POINT  (26)
+
+	INTO  shift 190
+	.  error
+
+
+state 155
+	sqljoin : sqljoininner .  (141)
+	sqljoininner : sqljoininner . INNER JOIN sqltb AS NAME sqlon  (144)
+
+	INNER  shift 191
+	INTO  reduce 141
+
+
+state 156
+	stmt : INSERT INTO sqltb LPAR . sqlfds RPAR VALUES LPAR sqlvls RPAR POINT  (27)
+
+	NAME  shift 63
+	NAMESQLJ  shift 64
+	.  error
+
+	sqlname  goto 65
+	sqlfds  goto 192
+
+
+state 157
+	exp : exp . PLUS exp  (51)
+	exp : exp . MINUS exp  (52)
+	exp : exp . TIMES exp  (53)
+	exp : exp . DIV exp  (54)
+	exp : LPAR exp . RPAR  (55)
+
+	RPAR  shift 193
+	PLUS  shift 158
+	MINUS  shift 159
+	DIV  shift 160
+	TIMES  shift 161
+	.  error
+
+
+state 158
+	exp : exp PLUS . exp  (51)
+
+	NUMINT  shift 103
+	NUMFLT  shift 104
+	NAME  shift 105
+	FIELD  shift 106
+	STRING  shift 107
+	LPAR  shift 108
+	.  error
+
+	exp  goto 194
+
+
+state 159
+	exp : exp MINUS . exp  (52)
+
+	NUMINT  shift 103
+	NUMFLT  shift 104
+	NAME  shift 105
+	FIELD  shift 106
+	STRING  shift 107
+	LPAR  shift 108
+	.  error
+
+	exp  goto 195
+
+
+state 160
+	exp : exp DIV . exp  (54)
+
+	NUMINT  shift 103
+	NUMFLT  shift 104
+	NAME  shift 105
+	FIELD  shift 106
+	STRING  shift 107
+	LPAR  shift 108
+	.  error
+
+	exp  goto 196
+
+
+state 161
+	exp : exp TIMES . exp  (53)
+
+	NUMINT  shift 103
+	NUMFLT  shift 104
+	NAME  shift 105
+	FIELD  shift 106
+	STRING  shift 107
+	LPAR  shift 108
+	.  error
+
+	exp  goto 197
+
+
+state 162
+	line2 : NL .  (8)
+
+	.  reduce 8
+
+
+state 163
+	stmt : IF log POINT input2 ELSE . POINT input2 ENDIF POINT  (16)
+
+	POINT  shift 198
+	.  error
+
+
+state 164
+	stmt : IF log POINT input2 ENDIF . POINT  (15)
+
+	POINT  shift 199
+	.  error
+
+
+state 165
+	line2 : stmt . NL  (9)
+
+	NL  shift 200
+	.  error
+
+
+state 166
+	input2 : input2 line2 .  (7)
+
+	.  reduce 7
+
+
+state 167
+	callout : OUT callatribs .  (90)
+	callatribs : callatribs . callatrib ml  (95)
+
+	NAME  shift 201
+	POINT  reduce 90
+	IN  reduce 90
+
+	callatrib  goto 202
+
+
+state 168
+	stmt : CALL namefunc2 ml callparam POINT .  (19)
+
+	.  reduce 19
+
+
+state 169
+	callin : IN . callatribs  (93)
+	callatribs : .  (94)
+
+	.  reduce 94
+
+	callatribs  goto 203
+
+
+state 170
+	callparam : callouts callins .  (87)
+
+	.  reduce 87
+
+
+state 171
+	callins : callin .  (92)
+
+	.  reduce 92
+
+
+state 172
+	stmt : WHILE log POINT input2 ENDWHILE . POINT  (14)
+
+	POINT  shift 204
+	.  error
+
+
+state 173
+	declvars : declvars . declvar1  (35)
+	funcin : IN declvars .  (83)
+
+	NL  shift 137
+	NAME  shift 30
+	TABLE  shift 31
+	POINT  reduce 83
+	OUT  reduce 83
+
+	declvar  goto 139
+	declvar1  goto 140
+
+
+state 174
+	stmt2 : SUB namefunc ml parameters POINT . input ENDSUB POINT  (31)
+	input : .  (1)
+
+	.  reduce 1
+
+	input  goto 205
+
+
+state 175
+	funcout : OUT . declvars  (86)
+	declvars : .  (34)
+
+	.  reduce 34
+
+	declvars  goto 206
+
+
+state 176
+	parameters : funcins funcouts .  (80)
+
+	.  reduce 80
+
+
+state 177
+	funcouts : funcout .  (85)
+
+	.  reduce 85
+
+
+state 178
+	stmt : TYPE NAME declvars ENDTYPE POINT .  (11)
+
+	.  reduce 11
+
+
+state 179
+	stmt : FOR EACH namestru IN nametab . POINT input2 ENDFOR POINT  (18)
+
+	POINT  shift 207
+	.  error
+
+
+state 180
+	stmt : APPEND namestru TO nametab POINT .  (20)
+
+	.  reduce 20
+
+
+state 181
+	stmt : READ nametab TO namestru logkey . POINT  (21)
+
+	POINT  shift 208
+	.  error
+
+
+state 182
+	logtb : NAME . EQ nameconst  (76)
+
+	EQ  shift 209
+	.  error
+
+
+state 183
+	logtbs : logtbs logtb .  (78)
+
+	.  reduce 78
+
+
+state 184
+	stmt : MODIFY nametab FROM namestru logkey . POINT  (29)
+
+	POINT  shift 210
+	.  error
+
+
+state 185
+	sqlpair : sqlfield EQ . sqlvar  (138)
+
+	NUMINT  shift 211
+	NUMFLT  shift 212
+	NAME  shift 213
+	FIELD  shift 214
+	STRING  shift 215
+	TRUE  shift 216
+	FALSE  shift 217
+	.  error
+
+	sqlvar  goto 218
+
+
+state 186
+	sqlpairs : sqlpairs COMMA . sqlpair  (140)
+
+	NAME  shift 148
+	.  error
+
+	sqlfield  goto 149
+	sqlpair  goto 219
+
+
+state 187
+	sqlwhere : WHERE . sqllog  (129)
+
+	NUMINT  shift 220
+	NUMFLT  shift 221
+	NAME  shift 63
+	FIELD  shift 222
+	STRING  shift 223
+	TRUE  shift 224
+	FALSE  shift 225
+	LPAR  shift 226
+	NAMESQLJ  shift 64
+	.  error
+
+	sqllog  goto 227
+	sqlname  goto 228
+
+
+state 188
+	stmt : UPDATE sqltb SET sqlpairs sqlwhere . POINT  (28)
+
+	POINT  shift 229
+	.  error
+
+
+state 189
+	sqljoininner : sqltb AS . NAME  (143)
+
+	NAME  shift 230
+	.  error
+
+
+state 190
+	stmt : SELECT sqlfds FROM sqljoin INTO . sqltb sqlwhere POINT  (26)
+
+	NAME  shift 61
+	.  error
+
+	sqltb  goto 231
+
+
+state 191
+	sqljoininner : sqljoininner INNER . JOIN sqltb AS NAME sqlon  (144)
+
+	JOIN  shift 232
+	.  error
+
+
+state 192
+	stmt : INSERT INTO sqltb LPAR sqlfds . RPAR VALUES LPAR sqlvls RPAR POINT  (27)
+	sqlfds : sqlfds . COMMA sqlname  (107)
+
+	COMMA  shift 100
+	RPAR  shift 233
+	.  error
+
+
+state 193
+	exp : LPAR exp RPAR .  (55)
+
+	.  reduce 55
+
+
+state 194
+	exp : exp . PLUS exp  (51)
+	exp : exp PLUS exp .  (51)
+	exp : exp . MINUS exp  (52)
+	exp : exp . TIMES exp  (53)
+	exp : exp . DIV exp  (54)
+
+	DIV  shift 160
+	TIMES  shift 161
+	POINT  reduce 51
+	RPAR  reduce 51
+	PLUS  reduce 51
+	MINUS  reduce 51
+
+
+state 195
+	exp : exp . PLUS exp  (51)
+	exp : exp . MINUS exp  (52)
+	exp : exp MINUS exp .  (52)
+	exp : exp . TIMES exp  (53)
+	exp : exp . DIV exp  (54)
+
+	DIV  shift 160
+	TIMES  shift 161
+	POINT  reduce 52
+	RPAR  reduce 52
+	PLUS  reduce 52
+	MINUS  reduce 52
+
+
+state 196
+	exp : exp . PLUS exp  (51)
+	exp : exp . MINUS exp  (52)
+	exp : exp . TIMES exp  (53)
+	exp : exp . DIV exp  (54)
+	exp : exp DIV exp .  (54)
+
+	.  reduce 54
+
+
+state 197
+	exp : exp . PLUS exp  (51)
+	exp : exp . MINUS exp  (52)
+	exp : exp . TIMES exp  (53)
+	exp : exp TIMES exp .  (53)
+	exp : exp . DIV exp  (54)
+
+	.  reduce 53
+
+
+state 198
+	stmt : IF log POINT input2 ELSE POINT . input2 ENDIF POINT  (16)
+	input2 : .  (6)
+
+	.  reduce 6
+
+	input2  goto 234
+
+
+state 199
+	stmt : IF log POINT input2 ENDIF POINT .  (15)
+
+	.  reduce 15
+
+
+state 200
+	line2 : stmt NL .  (9)
+
+	.  reduce 9
+
+
+state 201
+	callatrib : NAME . EQ nameconst  (96)
+
+	EQ  shift 235
+	.  error
+
+
+state 202
+	callatribs : callatribs callatrib . ml  (95)
+	ml : .  (102)
+
+	.  reduce 102
+
+	ml  goto 236
+
+
+state 203
+	callin : IN callatribs .  (93)
+	callatribs : callatribs . callatrib ml  (95)
+
+	NAME  shift 201
+	POINT  reduce 93
+
+	callatrib  goto 202
+
+
+state 204
+	stmt : WHILE log POINT input2 ENDWHILE POINT .  (14)
+
+	.  reduce 14
+
+
+state 205
+	input : input . line  (2)
+	stmt2 : SUB namefunc ml parameters POINT input . ENDSUB POINT  (31)
+
+	NL  shift 2
+	NAME  shift 3
+	FIELD  shift 4
+	DIM  shift 5
+	IF  shift 6
+	CALL  shift 7
+	WHILE  shift 8
+	SUB  shift 9
+	ENDSUB  shift 237
+	TYPE  shift 10
+	FOR  shift 11
+	BREAK  shift 12
+	APPEND  shift 13
+	READ  shift 14
+	DELETE  shift 15
+	LOAD  shift 16
+	TBFIRST  shift 17
+	GOTO  shift 18
+	BRANCH  shift 19
+	NATIVECALL  shift 20
+	MODIFY  shift 21
+	UPDATE  shift 22
+	SELECT  shift 23
+	INSERT  shift 24
+	.  error
+
+	line  goto 25
+	stmt  goto 26
+	stmt2  goto 27
+	attrib  goto 28
+	var  goto 29
+
+
+state 206
+	declvars : declvars . declvar1  (35)
+	funcout : OUT declvars .  (86)
+
+	NL  shift 137
+	NAME  shift 30
+	TABLE  shift 31
+	POINT  reduce 86
+
+	declvar  goto 139
+	declvar1  goto 140
+
+
+state 207
+	stmt : FOR EACH namestru IN nametab POINT . input2 ENDFOR POINT  (18)
+	input2 : .  (6)
+
+	.  reduce 6
+
+	input2  goto 238
+
+
+state 208
+	stmt : READ nametab TO namestru logkey POINT .  (21)
+
+	.  reduce 21
+
+
+state 209
+	logtb : NAME EQ . nameconst  (76)
+
+	NUMINT  shift 239
+	NUMFLT  shift 240
+	NAME  shift 241
+	FIELD  shift 242
+	STRING  shift 243
+	.  error
+
+	nameconst  goto 244
+
+
+state 210
+	stmt : MODIFY nametab FROM namestru logkey POINT .  (29)
+
+	.  reduce 29
+
+
+state 211
+	sqlvar : NUMINT .  (132)
+
+	.  reduce 132
+
+
+state 212
+	sqlvar : NUMFLT .  (133)
+
+	.  reduce 133
+
+
+state 213
+	sqlvar : NAME .  (135)
+
+	.  reduce 135
+
+
+state 214
+	sqlvar : FIELD .  (136)
+
+	.  reduce 136
+
+
+state 215
+	sqlvar : STRING .  (134)
+
+	.  reduce 134
+
+
+state 216
+	sqlvar : TRUE .  (130)
+
+	.  reduce 130
+
+
+state 217
+	sqlvar : FALSE .  (131)
+
+	.  reduce 131
+
+
+state 218
+	sqlpair : sqlfield EQ sqlvar .  (138)
+
+	.  reduce 138
+
+
+state 219
+	sqlpairs : sqlpairs COMMA sqlpair .  (140)
+
+	.  reduce 140
+
+
+state 220
+	sqllog : NUMINT .  (123)
+
+	.  reduce 123
+
+
+state 221
+	sqllog : NUMFLT .  (124)
+
+	.  reduce 124
+
+
+state 222
+	sqllog : FIELD .  (126)
+
+	.  reduce 126
+
+
+state 223
+	sqllog : STRING .  (125)
+
+	.  reduce 125
+
+
+state 224
+	sqllog : TRUE .  (121)
+
+	.  reduce 121
+
+
+state 225
+	sqllog : FALSE .  (122)
+
+	.  reduce 122
+
+
+state 226
+	sqllog : LPAR . sqllog RPAR  (120)
+
+	NUMINT  shift 220
+	NUMFLT  shift 221
+	NAME  shift 63
+	FIELD  shift 222
+	STRING  shift 223
+	TRUE  shift 224
+	FALSE  shift 225
+	LPAR  shift 226
+	NAMESQLJ  shift 64
+	.  error
+
+	sqllog  goto 245
+	sqlname  goto 228
+
+
+state 227
+	sqllog : sqllog . OR sqllog  (112)
+	sqllog : sqllog . AND sqllog  (113)
+	sqllog : sqllog . EQ sqllog  (114)
+	sqllog : sqllog . NEQ sqllog  (115)
+	sqllog : sqllog . LT sqllog  (116)
+	sqllog : sqllog . LTE sqllog  (117)
+	sqllog : sqllog . GT sqllog  (118)
+	sqllog : sqllog . GTE sqllog  (119)
+	sqlwhere : WHERE sqllog .  (129)
+
+	EQ  shift 246
+	AND  shift 247
+	OR  shift 248
+	LT  shift 249
+	LTE  shift 250
+	GT  shift 251
+	GTE  shift 252
+	NEQ  shift 253
+	POINT  reduce 129
+
+
+state 228
+	sqllog : sqlname .  (127)
+
+	.  reduce 127
+
+
+state 229
+	stmt : UPDATE sqltb SET sqlpairs sqlwhere POINT .  (28)
+
+	.  reduce 28
+
+
+state 230
+	sqljoininner : sqltb AS NAME .  (143)
+
+	.  reduce 143
+
+
+state 231
+	stmt : SELECT sqlfds FROM sqljoin INTO sqltb . sqlwhere POINT  (26)
+	sqlwhere : .  (128)
+
+	WHERE  shift 187
+	POINT  reduce 128
+
+	sqlwhere  goto 254
+
+
+state 232
+	sqljoininner : sqljoininner INNER JOIN . sqltb AS NAME sqlon  (144)
+
+	NAME  shift 61
+	.  error
+
+	sqltb  goto 255
+
+
+state 233
+	stmt : INSERT INTO sqltb LPAR sqlfds RPAR . VALUES LPAR sqlvls RPAR POINT  (27)
+
+	VALUES  shift 256
+	.  error
+
+
+state 234
+	input2 : input2 . line2  (7)
+	stmt : IF log POINT input2 ELSE POINT input2 . ENDIF POINT  (16)
+
+	NL  shift 162
+	NAME  shift 3
+	FIELD  shift 4
+	DIM  shift 5
+	IF  shift 6
+	CALL  shift 7
+	ENDIF  shift 257
+	WHILE  shift 8
+	TYPE  shift 10
+	FOR  shift 11
+	BREAK  shift 12
+	APPEND  shift 13
+	READ  shift 14
+	DELETE  shift 15
+	LOAD  shift 16
+	TBFIRST  shift 17
+	GOTO  shift 18
+	BRANCH  shift 19
+	NATIVECALL  shift 20
+	MODIFY  shift 21
+	UPDATE  shift 22
+	SELECT  shift 23
+	INSERT  shift 24
+	.  error
+
+	stmt  goto 165
+	line2  goto 166
+	attrib  goto 28
+	var  goto 29
+
+
+state 235
+	callatrib : NAME EQ . nameconst  (96)
+
+	NUMINT  shift 239
+	NUMFLT  shift 240
+	NAME  shift 241
+	FIELD  shift 242
+	STRING  shift 243
+	.  error
+
+	nameconst  goto 258
+
+
+state 236
+	callatribs : callatribs callatrib ml .  (95)
+	ml : ml . NL  (103)
+
+	NL  shift 127
+	NAME  reduce 95
+	POINT  reduce 95
+	IN  reduce 95
+
+
+state 237
+	stmt2 : SUB namefunc ml parameters POINT input ENDSUB . POINT  (31)
+
+	POINT  shift 259
+	.  error
+
+
+state 238
+	input2 : input2 . line2  (7)
+	stmt : FOR EACH namestru IN nametab POINT input2 . ENDFOR POINT  (18)
+
+	NL  shift 162
+	NAME  shift 3
+	FIELD  shift 4
+	DIM  shift 5
+	IF  shift 6
+	CALL  shift 7
+	WHILE  shift 8
+	TYPE  shift 10
+	FOR  shift 11
+	ENDFOR  shift 260
+	BREAK  shift 12
+	APPEND  shift 13
+	READ  shift 14
+	DELETE  shift 15
+	LOAD  shift 16
+	TBFIRST  shift 17
+	GOTO  shift 18
+	BRANCH  shift 19
+	NATIVECALL  shift 20
+	MODIFY  shift 21
+	UPDATE  shift 22
+	SELECT  shift 23
+	INSERT  shift 24
+	.  error
+
+	stmt  goto 165
+	line2  goto 166
+	attrib  goto 28
+	var  goto 29
+
+
+state 239
+	nameconst : NUMINT .  (99)
+
+	.  reduce 99
+
+
+state 240
+	nameconst : NUMFLT .  (100)
+
+	.  reduce 100
+
+
+state 241
+	nameconst : NAME .  (97)
+
+	.  reduce 97
+
+
+state 242
+	nameconst : FIELD .  (101)
+
+	.  reduce 101
+
+
+state 243
+	nameconst : STRING .  (98)
+
+	.  reduce 98
+
+
+state 244
+	logtb : NAME EQ nameconst .  (76)
+
+	.  reduce 76
+
+
+state 245
+	sqllog : sqllog . OR sqllog  (112)
+	sqllog : sqllog . AND sqllog  (113)
+	sqllog : sqllog . EQ sqllog  (114)
+	sqllog : sqllog . NEQ sqllog  (115)
+	sqllog : sqllog . LT sqllog  (116)
+	sqllog : sqllog . LTE sqllog  (117)
+	sqllog : sqllog . GT sqllog  (118)
+	sqllog : sqllog . GTE sqllog  (119)
+	sqllog : LPAR sqllog . RPAR  (120)
+
+	RPAR  shift 261
+	EQ  shift 246
+	AND  shift 247
+	OR  shift 248
+	LT  shift 249
+	LTE  shift 250
+	GT  shift 251
+	GTE  shift 252
+	NEQ  shift 253
+	.  error
+
+
+state 246
+	sqllog : sqllog EQ . sqllog  (114)
+
+	NUMINT  shift 220
+	NUMFLT  shift 221
+	NAME  shift 63
+	FIELD  shift 222
+	STRING  shift 223
+	TRUE  shift 224
+	FALSE  shift 225
+	LPAR  shift 226
+	NAMESQLJ  shift 64
+	.  error
+
+	sqllog  goto 262
+	sqlname  goto 228
+
+
+state 247
+	sqllog : sqllog AND . sqllog  (113)
+
+	NUMINT  shift 220
+	NUMFLT  shift 221
+	NAME  shift 63
+	FIELD  shift 222
+	STRING  shift 223
+	TRUE  shift 224
+	FALSE  shift 225
+	LPAR  shift 226
+	NAMESQLJ  shift 64
+	.  error
+
+	sqllog  goto 263
+	sqlname  goto 228
+
+
+state 248
+	sqllog : sqllog OR . sqllog  (112)
+
+	NUMINT  shift 220
+	NUMFLT  shift 221
+	NAME  shift 63
+	FIELD  shift 222
+	STRING  shift 223
+	TRUE  shift 224
+	FALSE  shift 225
+	LPAR  shift 226
+	NAMESQLJ  shift 64
+	.  error
+
+	sqllog  goto 264
+	sqlname  goto 228
+
+
+state 249
+	sqllog : sqllog LT . sqllog  (116)
+
+	NUMINT  shift 220
+	NUMFLT  shift 221
+	NAME  shift 63
+	FIELD  shift 222
+	STRING  shift 223
+	TRUE  shift 224
+	FALSE  shift 225
+	LPAR  shift 226
+	NAMESQLJ  shift 64
+	.  error
+
+	sqllog  goto 265
+	sqlname  goto 228
+
+
+state 250
+	sqllog : sqllog LTE . sqllog  (117)
+
+	NUMINT  shift 220
+	NUMFLT  shift 221
+	NAME  shift 63
+	FIELD  shift 222
+	STRING  shift 223
+	TRUE  shift 224
+	FALSE  shift 225
+	LPAR  shift 226
+	NAMESQLJ  shift 64
+	.  error
+
+	sqllog  goto 266
+	sqlname  goto 228
+
+
+state 251
+	sqllog : sqllog GT . sqllog  (118)
+
+	NUMINT  shift 220
+	NUMFLT  shift 221
+	NAME  shift 63
+	FIELD  shift 222
+	STRING  shift 223
+	TRUE  shift 224
+	FALSE  shift 225
+	LPAR  shift 226
+	NAMESQLJ  shift 64
+	.  error
+
+	sqllog  goto 267
+	sqlname  goto 228
+
+
+state 252
+	sqllog : sqllog GTE . sqllog  (119)
+
+	NUMINT  shift 220
+	NUMFLT  shift 221
+	NAME  shift 63
+	FIELD  shift 222
+	STRING  shift 223
+	TRUE  shift 224
+	FALSE  shift 225
+	LPAR  shift 226
+	NAMESQLJ  shift 64
+	.  error
+
+	sqllog  goto 268
+	sqlname  goto 228
+
+
+state 253
+	sqllog : sqllog NEQ . sqllog  (115)
+
+	NUMINT  shift 220
+	NUMFLT  shift 221
+	NAME  shift 63
+	FIELD  shift 222
+	STRING  shift 223
+	TRUE  shift 224
+	FALSE  shift 225
+	LPAR  shift 226
+	NAMESQLJ  shift 64
+	.  error
+
+	sqllog  goto 269
+	sqlname  goto 228
+
+
+state 254
+	stmt : SELECT sqlfds FROM sqljoin INTO sqltb sqlwhere . POINT  (26)
+
+	POINT  shift 270
+	.  error
+
+
+state 255
+	sqljoininner : sqljoininner INNER JOIN sqltb . AS NAME sqlon  (144)
+
+	AS  shift 271
+	.  error
+
+
+state 256
+	stmt : INSERT INTO sqltb LPAR sqlfds RPAR VALUES . LPAR sqlvls RPAR POINT  (27)
+
+	LPAR  shift 272
+	.  error
+
+
+state 257
+	stmt : IF log POINT input2 ELSE POINT input2 ENDIF . POINT  (16)
+
+	POINT  shift 273
+	.  error
+
+
+state 258
+	callatrib : NAME EQ nameconst .  (96)
+
+	.  reduce 96
+
+
+state 259
+	stmt2 : SUB namefunc ml parameters POINT input ENDSUB POINT .  (31)
+
+	.  reduce 31
+
+
+state 260
+	stmt : FOR EACH namestru IN nametab POINT input2 ENDFOR . POINT  (18)
+
+	POINT  shift 274
+	.  error
+
+
+state 261
+	sqllog : LPAR sqllog RPAR .  (120)
+
+	.  reduce 120
+
+
+state 262
+	sqllog : sqllog . OR sqllog  (112)
+	sqllog : sqllog . AND sqllog  (113)
+	sqllog : sqllog . EQ sqllog  (114)
+	sqllog : sqllog EQ sqllog .  (114)
+	sqllog : sqllog . NEQ sqllog  (115)
+	sqllog : sqllog . LT sqllog  (116)
+	sqllog : sqllog . LTE sqllog  (117)
+	sqllog : sqllog . GT sqllog  (118)
+	sqllog : sqllog . GTE sqllog  (119)
+
+	AND  shift 247
+	OR  shift 248
+	LT  shift 249
+	LTE  shift 250
+	GT  shift 251
+	GTE  shift 252
+	NEQ  shift 253
+	POINT  reduce 114
+	RPAR  reduce 114
+	EQ  reduce 114
+
+
+state 263
+	sqllog : sqllog . OR sqllog  (112)
+	sqllog : sqllog . AND sqllog  (113)
+	sqllog : sqllog AND sqllog .  (113)
+	sqllog : sqllog . EQ sqllog  (114)
+	sqllog : sqllog . NEQ sqllog  (115)
+	sqllog : sqllog . LT sqllog  (116)
+	sqllog : sqllog . LTE sqllog  (117)
+	sqllog : sqllog . GT sqllog  (118)
+	sqllog : sqllog . GTE sqllog  (119)
+
+	OR  shift 248
+	LT  shift 249
+	LTE  shift 250
+	GT  shift 251
+	GTE  shift 252
+	NEQ  shift 253
+	POINT  reduce 113
+	RPAR  reduce 113
+	EQ  reduce 113
+	AND  reduce 113
+
+
+state 264
+	sqllog : sqllog . OR sqllog  (112)
+	sqllog : sqllog OR sqllog .  (112)
+	sqllog : sqllog . AND sqllog  (113)
+	sqllog : sqllog . EQ sqllog  (114)
+	sqllog : sqllog . NEQ sqllog  (115)
+	sqllog : sqllog . LT sqllog  (116)
+	sqllog : sqllog . LTE sqllog  (117)
+	sqllog : sqllog . GT sqllog  (118)
+	sqllog : sqllog . GTE sqllog  (119)
+
+	LT  shift 249
+	LTE  shift 250
+	GT  shift 251
+	GTE  shift 252
+	NEQ  shift 253
+	POINT  reduce 112
+	RPAR  reduce 112
+	EQ  reduce 112
+	AND  reduce 112
+	OR  reduce 112
+
+
+state 265
+	sqllog : sqllog . OR sqllog  (112)
+	sqllog : sqllog . AND sqllog  (113)
+	sqllog : sqllog . EQ sqllog  (114)
+	sqllog : sqllog . NEQ sqllog  (115)
+	sqllog : sqllog . LT sqllog  (116)
+	sqllog : sqllog LT sqllog .  (116)
+	sqllog : sqllog . LTE sqllog  (117)
+	sqllog : sqllog . GT sqllog  (118)
+	sqllog : sqllog . GTE sqllog  (119)
+
+	GT  shift 251
+	GTE  shift 252
+	NEQ  shift 253
+	POINT  reduce 116
+	RPAR  reduce 116
+	EQ  reduce 116
+	AND  reduce 116
+	OR  reduce 116
+	LT  reduce 116
+	LTE  reduce 116
+
+
+state 266
+	sqllog : sqllog . OR sqllog  (112)
+	sqllog : sqllog . AND sqllog  (113)
+	sqllog : sqllog . EQ sqllog  (114)
+	sqllog : sqllog . NEQ sqllog  (115)
+	sqllog : sqllog . LT sqllog  (116)
+	sqllog : sqllog . LTE sqllog  (117)
+	sqllog : sqllog LTE sqllog .  (117)
+	sqllog : sqllog . GT sqllog  (118)
+	sqllog : sqllog . GTE sqllog  (119)
+
+	LT  shift 249
+	GT  shift 251
+	GTE  shift 252
+	NEQ  shift 253
+	POINT  reduce 117
+	RPAR  reduce 117
+	EQ  reduce 117
+	AND  reduce 117
+	OR  reduce 117
+	LTE  reduce 117
+
+
+state 267
+	sqllog : sqllog . OR sqllog  (112)
+	sqllog : sqllog . AND sqllog  (113)
+	sqllog : sqllog . EQ sqllog  (114)
+	sqllog : sqllog . NEQ sqllog  (115)
+	sqllog : sqllog . LT sqllog  (116)
+	sqllog : sqllog . LTE sqllog  (117)
+	sqllog : sqllog . GT sqllog  (118)
+	sqllog : sqllog GT sqllog .  (118)
+	sqllog : sqllog . GTE sqllog  (119)
+
+	NEQ  shift 253
+	POINT  reduce 118
+	RPAR  reduce 118
+	EQ  reduce 118
+	AND  reduce 118
+	OR  reduce 118
+	LT  reduce 118
+	LTE  reduce 118
+	GT  reduce 118
+	GTE  reduce 118
+
+
+state 268
+	sqllog : sqllog . OR sqllog  (112)
+	sqllog : sqllog . AND sqllog  (113)
+	sqllog : sqllog . EQ sqllog  (114)
+	sqllog : sqllog . NEQ sqllog  (115)
+	sqllog : sqllog . LT sqllog  (116)
+	sqllog : sqllog . LTE sqllog  (117)
+	sqllog : sqllog . GT sqllog  (118)
+	sqllog : sqllog . GTE sqllog  (119)
+	sqllog : sqllog GTE sqllog .  (119)
+
+	GT  shift 251
+	NEQ  shift 253
+	POINT  reduce 119
+	RPAR  reduce 119
+	EQ  reduce 119
+	AND  reduce 119
+	OR  reduce 119
+	LT  reduce 119
+	LTE  reduce 119
+	GTE  reduce 119
+
+
+state 269
+	sqllog : sqllog . OR sqllog  (112)
+	sqllog : sqllog . AND sqllog  (113)
+	sqllog : sqllog . EQ sqllog  (114)
+	sqllog : sqllog . NEQ sqllog  (115)
+	sqllog : sqllog NEQ sqllog .  (115)
+	sqllog : sqllog . LT sqllog  (116)
+	sqllog : sqllog . LTE sqllog  (117)
+	sqllog : sqllog . GT sqllog  (118)
+	sqllog : sqllog . GTE sqllog  (119)
+
+	.  reduce 115
+
+
+state 270
+	stmt : SELECT sqlfds FROM sqljoin INTO sqltb sqlwhere POINT .  (26)
+
+	.  reduce 26
+
+
+state 271
+	sqljoininner : sqljoininner INNER JOIN sqltb AS . NAME sqlon  (144)
+
+	NAME  shift 275
+	.  error
+
+
+state 272
+	stmt : INSERT INTO sqltb LPAR sqlfds RPAR VALUES LPAR . sqlvls RPAR POINT  (27)
+
+	NUMINT  shift 239
+	NUMFLT  shift 240
+	NAME  shift 241
+	FIELD  shift 242
+	STRING  shift 243
+	.  error
+
+	sqlvls  goto 276
+	nameconst  goto 277
+
+
+state 273
+	stmt : IF log POINT input2 ELSE POINT input2 ENDIF POINT .  (16)
+
+	.  reduce 16
+
+
+state 274
+	stmt : FOR EACH namestru IN nametab POINT input2 ENDFOR POINT .  (18)
+
+	.  reduce 18
+
+
+state 275
+	sqljoininner : sqljoininner INNER JOIN sqltb AS NAME . sqlon  (144)
+
+	ON  shift 278
+	.  error
+
+	sqlon  goto 279
+
+
+state 276
+	stmt : INSERT INTO sqltb LPAR sqlfds RPAR VALUES LPAR sqlvls . RPAR POINT  (27)
+	sqlvls : sqlvls . COMMA nameconst  (109)
+
+	COMMA  shift 280
+	RPAR  shift 281
+	.  error
+
+
+state 277
+	sqlvls : nameconst .  (108)
+
+	.  reduce 108
+
+
+state 278
+	sqlon : ON . sqlonpars  (145)
+
+	NAMESQLJ  shift 282
+	.  error
+
+	sqlonpars  goto 283
+	sqlonpar  goto 284
+	sqlfieldon  goto 285
+
+
+state 279
+	sqljoininner : sqljoininner INNER JOIN sqltb AS NAME sqlon .  (144)
+
+	.  reduce 144
+
+
+state 280
+	sqlvls : sqlvls COMMA . nameconst  (109)
+
+	NUMINT  shift 239
+	NUMFLT  shift 240
+	NAME  shift 241
+	FIELD  shift 242
+	STRING  shift 243
+	.  error
+
+	nameconst  goto 286
+
+
+state 281
+	stmt : INSERT INTO sqltb LPAR sqlfds RPAR VALUES LPAR sqlvls RPAR . POINT  (27)
+
+	POINT  shift 287
+	.  error
+
+
+state 282
+	sqlfieldon : NAMESQLJ .  (149)
+
+	.  reduce 149
+
+
+state 283
+	sqlon : ON sqlonpars .  (145)
+	sqlonpars : sqlonpars . AND sqlonpar  (147)
+
+	AND  shift 288
+	INNER  reduce 145
+	INTO  reduce 145
+
+
+state 284
+	sqlonpars : sqlonpar .  (146)
+
+	.  reduce 146
+
+
+state 285
+	sqlonpar : sqlfieldon . EQ sqlfieldon  (148)
+
+	EQ  shift 289
+	.  error
+
+
+state 286
+	sqlvls : sqlvls COMMA nameconst .  (109)
+
+	.  reduce 109
+
+
+state 287
+	stmt : INSERT INTO sqltb LPAR sqlfds RPAR VALUES LPAR sqlvls RPAR POINT .  (27)
+
+	.  reduce 27
+
+
+state 288
+	sqlonpars : sqlonpars AND . sqlonpar  (147)
+
+	NAMESQLJ  shift 282
+	.  error
+
+	sqlonpar  goto 290
+	sqlfieldon  goto 285
+
+
+state 289
+	sqlonpar : sqlfieldon EQ . sqlfieldon  (148)
+
+	NAMESQLJ  shift 282
+	.  error
+
+	sqlfieldon  goto 291
+
+
+state 290
+	sqlonpars : sqlonpars AND sqlonpar .  (147)
+
+	.  reduce 147
+
+
+state 291
+	sqlonpar : sqlfieldon EQ sqlfieldon .  (148)
+
+	.  reduce 148
+
+
+Rules never reduced:
+	sqlvtb : NAME  (111)
+
+
+76 terminals, 53 nonterminals
+150 grammar rules, 292 states
